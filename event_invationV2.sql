@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 18 Nov 2024 pada 05.00
+-- Waktu pembuatan: 12 Des 2024 pada 06.19
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `event_invation`
+-- Database: `event_invationv2`
 --
 
 -- --------------------------------------------------------
@@ -29,9 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `acara` (
   `acara_id` int(11) NOT NULL,
-  `nama_acara` varchar(100) NOT NULL,
+  `nama_acara` varchar(255) NOT NULL,
   `tgl_acara` date NOT NULL,
-  `lokasi_acara` varchar(100) NOT NULL,
+  `lokasi_acara` varchar(255) DEFAULT NULL,
   `deskripsi` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,9 +40,7 @@ CREATE TABLE `acara` (
 --
 
 INSERT INTO `acara` (`acara_id`, `nama_acara`, `tgl_acara`, `lokasi_acara`, `deskripsi`) VALUES
-(1, 'gotongroyong', '0000-00-00', 'lapangan', 'bersih-bersih'),
-(2, 'kerkom-web', '0000-00-00', 'rmh-farras', 'buat-websejarah'),
-(3, 'kerkom-web', '0000-00-00', 'rmh-farras', 'buat-websejarah');
+(19, 'kerkom', '2024-12-08', 'rumah farras', 'otewie');
 
 -- --------------------------------------------------------
 
@@ -52,33 +50,18 @@ INSERT INTO `acara` (`acara_id`, `nama_acara`, `tgl_acara`, `lokasi_acara`, `des
 
 CREATE TABLE `tamu` (
   `tamu_id` int(11) NOT NULL,
-  `namaTamu` varchar(100) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `status_kehadiran` varchar(100) DEFAULT NULL
+  `nama_tamu` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `status` enum('hadir','tidak hadir','belum dikonfirmasi') DEFAULT 'belum dikonfirmasi',
+  `acara_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `tamu`
 --
 
-INSERT INTO `tamu` (`tamu_id`, `namaTamu`, `email`, `status_kehadiran`) VALUES
-(1, 'farras', 'farras@gmail', 'hadir'),
-(2, 'yuri', 'yuri@gmail', 'hadir'),
-(3, 'pasha', 'pasha@gmail', 'ragu-ragu'),
-(4, 'mosir', 'mosir@gmail', 'tidak-hadir');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `tamu2`
---
-
-CREATE TABLE `tamu2` (
-  `tamu_id` int(11) NOT NULL,
-  `namaTamu` varchar(100) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `status_kehadiran` enum('hadir','tidak_hadir','ragu-ragu') DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `tamu` (`tamu_id`, `nama_tamu`, `email`, `status`, `acara_id`) VALUES
+(18, 'isya', 'isyabindarp@gmail.com', 'hadir', NULL);
 
 --
 -- Indexes for dumped tables
@@ -95,14 +78,33 @@ ALTER TABLE `acara`
 --
 ALTER TABLE `tamu`
   ADD PRIMARY KEY (`tamu_id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD KEY `acara_id` (`acara_id`);
 
 --
--- Indeks untuk tabel `tamu2`
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
-ALTER TABLE `tamu2`
-  ADD PRIMARY KEY (`tamu_id`),
-  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT untuk tabel `acara`
+--
+ALTER TABLE `acara`
+  MODIFY `acara_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT untuk tabel `tamu`
+--
+ALTER TABLE `tamu`
+  MODIFY `tamu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `tamu`
+--
+ALTER TABLE `tamu`
+  ADD CONSTRAINT `tamu_ibfk_1` FOREIGN KEY (`acara_id`) REFERENCES `acara` (`acara_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
